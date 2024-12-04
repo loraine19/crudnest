@@ -19,7 +19,6 @@ export class UsersService {
   async findOne(id: number){
     const connection = this.dbService.getConnection();
     const [rows] = await connection.query('SELECT * FROM User WHERE id = ?', [id]);
-    console.log(rows[0])
     if(!rows[0]) { throw new HttpException(`User ${id} not found `, HttpStatus.NOT_FOUND) }
     return rows[0];
   }
@@ -27,6 +26,7 @@ export class UsersService {
   async createUser(user: CreateUserDto) {
     const connection = this.dbService.getConnection();
     const [result] = await connection.query<ResultSetHeader>('INSERT INTO User SET?', user);
+    console.log([result])
     return { id: result.insertId, ...user };
   }
 

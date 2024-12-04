@@ -22,3 +22,15 @@ export class User {
         this.lastConnection = lastConnection;
     }
 }
+
+
+
+// CREATE TABLE `User` (
+//     `id` INTEGER NOT NULL  AUTO_INCREMENT,
+//     `email` TEXT NOT NULL,
+//     `password` TEXT NOT NULL,
+//     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     `lastConnection` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     PRIMARY KEY (`id`)
+// );

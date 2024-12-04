@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -27,7 +27,8 @@ export class UsersController {
 
 
   @Patch(':id')
-  updateUser(@Param('id') id: string, @Body() user: any) {
+  updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
+    if (!user) { throw new HttpException(`Non modifié `, HttpStatus.NOT_FOUND) }
     return this.userService.updateUser((+id as any ), user);
   }
 
