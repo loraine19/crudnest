@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DatabaseService } from 'src/database.service';
@@ -16,20 +16,22 @@ export class UsersService {
     return rows;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number){
     const connection = this.dbService.getConnection();
     const [rows] = await connection.query('SELECT * FROM User WHERE id = ?', [id]);
-    return rows;
+    console.log(rows[0])
+    if(!rows[0]) { throw new HttpException(`User ${id} not found `, HttpStatus.NOT_FOUND) }
+    return rows[0];
   }
 
-  async createUser(user: User) {
+  async createUser(user: CreateUserDto) {
     const connection = this.dbService.getConnection();
     const [result] = await connection.query<ResultSetHeader>('INSERT INTO User SET?', user);
     return { id: result.insertId, ...user };
   }
 
 
-  async updateUser(id: number, user: User,) {
+  async updateUser(id: number, user: UpdateUserDto,) {
     const connection = this.dbService.getConnection();
     const [rows] = await connection.query('UPDATE User SET? WHERE id =?', [user, id]);
     return [user, rows];
@@ -38,7 +40,8 @@ export class UsersService {
 
   async removeUser(id: number) {
     const connection = this.dbService.getConnection();
-    const [rows] = await connection.query('DELETE FROM User WHERE id =?',id);
-    return [rows];
+    const [rows] = await connection.query('DELETE FROM User WHERE id =?', id);
+    if(!rows[0]) { throw new HttpException(`User ${id} not found `, HttpStatus.NOT_FOUND) }
+    return rows[0];
   }
 }
